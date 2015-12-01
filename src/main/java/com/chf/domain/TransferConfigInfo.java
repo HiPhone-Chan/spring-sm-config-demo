@@ -32,4 +32,10 @@ public class TransferConfigInfo {
 		this.event = event;
 	}
 
+	@Override
+	public String toString() {
+		return "TransferConfigInfo [from=" + from + ", to=" + to + ", event="
+				+ event + "]";
+	}
+
 }
