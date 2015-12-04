@@ -1,21 +1,28 @@
 package com.chf.conf;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import org.springframework.statemachine.config.configurers.ExternalTransitionConfigurer;
 import org.springframework.statemachine.listener.StateMachineListener;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
-//@Configuration
-//@EnableStateMachine
-public class StateMachineConfig
+import com.chf.domain.StateMechineConfigInfo;
+import com.chf.domain.TransferConfigInfo;
+
+@Configuration
+@EnableStateMachine
+public class DynStateMachineConfig
 		extends StateMachineConfigurerAdapter<String, String> {
+
+	@Autowired
+	private StateMechineConfigInfo stateMechineConfigInfo;
 
 	@Override
 	public void configure(
@@ -27,16 +34,33 @@ public class StateMachineConfig
 	@Override
 	public void configure(StateMachineStateConfigurer<String, String> states)
 			throws Exception {
-		states.withStates().initial("SI")
-				.states(new HashSet<String>(Arrays.asList("SI", "S1", "S2")));
+		System.out.println(stateMechineConfigInfo);
+		states.withStates().initial(stateMechineConfigInfo.getInitState())
+				.states(stateMechineConfigInfo.getAllStates());
 	}
 
 	@Override
 	public void configure(
 			StateMachineTransitionConfigurer<String, String> transitions)
 					throws Exception {
-		transitions.withExternal().source("SI").target("S1").event("E1").and()
-				.withExternal().source("S1").target("S2").event("E2");
+
+		ExternalTransitionConfigurer<String, String> externalTransitionConfig = null;
+		// externalTransitionConfig.source("SI").target("S1").event("E1").and()
+		// .withExternal().source("S1").target("S2").event("E2");
+
+		for (TransferConfigInfo transferConfigInfo : stateMechineConfigInfo
+				.getTransferConfigInfos()) {
+
+			if (externalTransitionConfig == null) {
+				externalTransitionConfig = transitions.withExternal();
+			} else {
+				externalTransitionConfig = externalTransitionConfig.and()
+						.withExternal();
+			}
+			externalTransitionConfig.source(transferConfigInfo.getFrom())
+					.target(transferConfigInfo.getTo())
+					.event(transferConfigInfo.getEvent());
+		}
 	}
 
 	@Bean

@@ -5,6 +5,9 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.chf.com/schema/chf http://www.chf.com/schema/chf/parser.xsd">
 
-	<chf:smconfig id="tranconfig" from="1" to="2" />
+	<chf:smconfig id="smconfig" initState="SI">
+		<chf:transfer from="SI" to="S1" event="E1"/>
+		<chf:transfer from="S1" to="S2" event="E2"/>
+	</chf:smconfig>
 
 </beans>

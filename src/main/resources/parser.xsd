@@ -6,14 +6,22 @@
 
 	<xsd:import namespace="http://www.springframework.org/schema/beans" />
 
+	<xsd:element name="transfer">
+		<xsd:complexType>
+			<xsd:attribute name="from" type="xsd:string" use="required" />
+			<xsd:attribute name="to" type="xsd:string" use="required" />
+			<xsd:attribute name="event" type="xsd:string" use="required" />
+		</xsd:complexType>
+	</xsd:element>
+
 	<xsd:element name="smconfig">
 		<xsd:complexType>
-			<xsd:complexContent>
-				<xsd:extension base="beans:identifiedType">
-					<xsd:attribute name="from" type="xsd:string" use="required" />
-					<xsd:attribute name="to" type="xsd:string" use="required" />
-				</xsd:extension>
-			</xsd:complexContent>
+
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="transfer" />
+			</xsd:choice>
+			<xsd:attribute name="id" type="xsd:ID" />
+			<xsd:attribute name="initState" type="xsd:string" />
 		</xsd:complexType>
 	</xsd:element>
 
