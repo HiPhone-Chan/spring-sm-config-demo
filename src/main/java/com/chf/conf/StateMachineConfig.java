@@ -11,6 +11,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import org.springframework.statemachine.listener.StateMachineListener;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
+import org.springframework.statemachine.zookeeper.ZookeeperStateMachinePersist;
 
 //@Configuration
 //@EnableStateMachine
